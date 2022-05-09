@@ -11,16 +11,17 @@ int main() {
 	double mB[3] = { -3, 2, 1 };
 	size_t n = sizeof(mB) / sizeof(mB[0]);
 	double x[3];
+	int k = 0, i = 0, j = 0;
 
 	printf("\n ================= Forward Elimination Step =================");
 
 	// Forward Elimination
-	for (int k = 0; k < n - 1; k++)
+	for (k = 0; k < n - 1; k++)
 	{
-		for (int i = k + 1; i < n; i++)
+		for (i = k + 1; i < n; i++)
 		{
 			double factor = mA[i][k] / mA[k][k];
-			for (int j = k; j < n; j++)
+			for (j = k; j < n; j++)
 			{
 				mA[i][j] -= factor * mA[k][j];
 			}
@@ -28,9 +29,9 @@ int main() {
 		}
 	}
 
-	for (int i = 0; i < n; i++)
+	for (i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n + 1; j++)
+		for (j = 0; j < n + 1; j++)
 		{
 			printf("%.2f ", mA[i][j]);
 		}
@@ -42,19 +43,19 @@ int main() {
 
 	// Backward Substitution
 	x[n - 1] = mB[n - 1] / mA[n - 1][n - 1];
-	for (int i = n - 1; i >= 0; i--)
+	for (i = n - 1; i >= 0; i--)
 	{
 		double Sum = mB[i];
-		for (int j = i + 1; j < n; j++)
+		for (j = i + 1; j < n; j++)
 		{
 			Sum -= mA[i][j] * x[j];
 		}
 		x[i] = Sum / mA[i][i];
 	}
 
-	for (int i = 0; i < n; i++)
+	for (i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n + 1; j++)
+		for (j = 0; j < n + 1; j++)
 		{
 			printf("%.2f ", mA[i][j]);
 		}
@@ -62,7 +63,7 @@ int main() {
 	}
 
 	// result of X
-	for (int i = 0; i < n; i++)
+	for (i = 0; i < n; i++)
 	{
 		printf("\nResults of X%d: %.2f ", i+1, x[i]);
 	}
