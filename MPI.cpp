@@ -1,20 +1,79 @@
-// MPI.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Name: Andrew Izedomwen, Student ID: 201187740
 
-#include <iostream>
+#include <stdio.h>
+#include <omp.h>
 
-int main()
-{
-    std::cout << "Hello World!\n";
+int main() {
+
+	double mA[3][3] = {
+		{1, 1, -1},
+		{6, 2, 2},
+		{-3, 4, 1}
+	};
+
+	double mB[3] = { -3, 2, 1 };
+	size_t n = sizeof(mB) / sizeof(mB[0]);
+	double x[3];
+	int k = 0, i = 0, j = 0;
+
+	printf("\n ================= Forward Elimination Step =================");
+
+	// Forward Elimination
+	for (k = 0; k < n - 1; k++)
+	{
+		#pragma omp parallel shared(mA, mB, n, k) private(i, j) for  
+		for (i = k + 1; i < n; i++)
+		{
+			#pragma omp parallel shared(mA, mB, n, k, i) private(j) for
+			double factor = mA[i][k] / mA[k][k];
+			for (j = k; j < n; j++)
+			{
+				mA[i][j] -= factor * mA[k][j];
+			}
+			mB[i] -= factor * mB[k];
+		}
+	}
+
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n + 1; j++)
+		{
+			printf("%.2f ", mA[i][j]);
+		}
+
+		printf("%.2f \n", mB[i]);
+	}
+
+	printf("\n ================= Backward Substitution Step =================");
+
+	// Backward Substitution
+	x[n - 1] = mB[n - 1] / mA[n - 1][n - 1];
+	for (i = n - 1; i >= 0; i--)
+	{
+		double Sum = mB[i];
+		for (j = i + 1; j < n; j++)
+		{
+			Sum -= mA[i][j] * x[j];
+		}
+		x[i] = Sum / mA[i][i];
+	}
+
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n + 1; j++)
+		{
+			printf("%.2f ", mA[i][j]);
+		}
+		printf("\n");
+	}
+
+	// result of X
+	for (i = 0; i < n; i++)
+	{
+		printf("\nResults of X%d: %.2f ", i+1, x[i]);
+	}
+
+	printf("\n");
+
+	return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
