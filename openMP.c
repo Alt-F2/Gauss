@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <omp.h>
+#include <time.h>
+
 
 int main() {
 
@@ -15,6 +17,9 @@ int main() {
 	size_t n = sizeof(mB) / sizeof(mB[0]);
 	double x[3];
 	int k = 0, i = 0, j = 0;
+
+
+	clock_t begin = clock();
 
 	printf("\n ================= Forward Elimination Step =================");
 
@@ -74,6 +79,11 @@ int main() {
 	}
 
 	printf("\n");
+
+	clock_t end = clock();
+
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Running Time: %.2f \n", time_spent);
 
 	return 0;
 }
