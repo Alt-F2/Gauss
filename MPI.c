@@ -1,4 +1,4 @@
-// Name: Andrew Izedomwen, Student ID: 201187740
+ // Name: Andrew Izedomwen, Student ID : 201187740
 
 #include <stdio.h>
 #include <mpi.h>
@@ -17,7 +17,7 @@ int main() {
 	double x[3];
 	int k = 0, i = 0, j = 0;
 
-	clock_t timer = clock();
+	clock_t begin = clock();
 
 	int ranking, processorNum, part;
 	MPI_Init(NULL, NULL);
@@ -81,6 +81,11 @@ int main() {
 	}
 
 	printf("\n");
+
+	clock_t end = clock();
+
+	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("Running Time: %.2f ", time_spent);
 
 	return 0;
 }
