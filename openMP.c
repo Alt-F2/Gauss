@@ -1,4 +1,7 @@
+// Name: Andrew Izedomwen, Student ID: 201187740
+
 #include <stdio.h>
+#include <omp.h>
 
 int main() {
 
@@ -18,8 +21,10 @@ int main() {
 	// Forward Elimination
 	for (k = 0; k < n - 1; k++)
 	{
+		#pragma omp parallel shared(mA, mB, n, k) private(i, j) for  
 		for (i = k + 1; i < n; i++)
 		{
+			#pragma omp parallel shared(mA, mB, n, k, i) private(j) for
 			double factor = mA[i][k] / mA[k][k];
 			for (j = k; j < n; j++)
 			{
